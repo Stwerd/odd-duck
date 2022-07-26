@@ -1,5 +1,4 @@
 'use strict';
-
 /*
 
 Goat Picker
@@ -40,19 +39,22 @@ console.log('hi');
 
 // GLOBAL VARIABLES
 let productContainer = document.querySelector('section');
-let resultButton = document.querySelector('section + div');
+let resultButton = document.querySelector('section + div span');
 let ul = document.querySelector('ul');
 
 let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 let image3 = document.querySelector('section img:nth-child(3)');
 
-
 let allProducts = [];
 let Globeclicks = 0;
+let clickAllowed = 5;
 
-let clickAllowed = 25;
+let prodViews = [];
+let prodNames = [];
+let prodClicks = [];
 
+//canvas
 
 // CONSTRUCTOR
 
@@ -96,6 +98,8 @@ function renderProducts() {
   // console.log(allProducts);
 }
 
+
+
 function handleProductClick(event) {
   if (event.target === productContainer) {
     alert('Please click on an image');
@@ -118,10 +122,15 @@ function handleProductClick(event) {
   renderProducts();
 }
 
+
+// If you click the button, it creates a list, then removes the ability to click in again.
 function handleButtonClick() {
   renderResults();
   resultButton.removeEventListener('click', handleButtonClick);
 }
+
+
+// Sorts array with the first index having most clicks
 function arraySort() {
   let arrPush = [];
   while (allProducts.length > 0) {
@@ -141,17 +150,67 @@ function arraySort() {
   }
   allProducts = arrPush;
 }
+
+
+// Capitalized first letter of each product
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
 function renderResults() {
   arraySort(allProducts);
-  console.log(allProducts);
   // for each  prod in my array, generate a LI
   // ex: name had X views and was clicked on X times
   for (let i = 0; i < allProducts.length; i++) {
-    let li = document.createElement('li');
-    li.textContent = `${allProducts[i].name}: ${allProducts[i].clicks} Votes`;
+    prodClicks.push(allProducts[i].clicks);
+    prodNames.push(allProducts[i].name);
+    prodViews.push(allProducts[i].views);
+    let li =document.createElement('li');
+    li.textContent = `${allProducts[i].name}: ${allProducts[i].views} views & ${allProducts[i].clicks}`;
     ul.appendChild(li);
   }
+  console.log('this is a test' + prodNames);
+  console.log('this is a test' + prodClicks);
+  console.log('this is a test' + prodViews);
+  renderChart();
 }
+function renderChart(){
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: prodNames,
+      datasets: [{
+        label: '# of Votes',
+        data: prodClicks,
+        backgroundColor: 'rgba(0,0,255,0.2)',
+        borderColor: 'rgba(0,0,255,1)',
+        borderWidth: 1
+      },
+      {
+        label: '# of Views',
+        data: prodViews,
+        backgroundColor: 'rgba(255, 99, 132, 0.8)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    }, options: {
+      indexAxis: 'x',
+      legend: {
+          fontColor: "white",
+          fontSize: 18
+      },
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  })
+}
+
 
 // EXCUTABLE CODE
 
@@ -181,3 +240,4 @@ allProducts.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthu
 console.log(allProducts);
 renderProducts();
 productContainer.addEventListener('click', handleProductClick);
+

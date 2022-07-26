@@ -51,7 +51,7 @@ let image3 = document.querySelector('section img:nth-child(3)');
 let allProducts = [];
 let Globeclicks = 0;
 
-let clickAllowed = 3;
+let clickAllowed = 25;
 
 
 // CONSTRUCTOR
@@ -81,7 +81,7 @@ function renderProducts() {
     prod2 = getRandomProduct();
     prod3 = getRandomProduct();
 
-    console.log(prod1, prod2, prod3);
+    // console.log(prod1, prod2, prod3);
   }
 
   image1.src = allProducts[prod1].src;
@@ -93,25 +93,24 @@ function renderProducts() {
   image3.src = allProducts[prod3].src;
   image3.alt = allProducts[prod3].name;
   allProducts[prod3].views++;
-  console.log(allProducts);
+  // console.log(allProducts);
 }
 
 function handleProductClick(event) {
   if (event.target === productContainer) {
     alert('Please click on an image');
   }
-  Globeclicks ++;
+  Globeclicks++;
   let clickedProd = event.target.alt;
-  console.log(clickedProd);
+  // console.log(clickedProd);
 
-  for (let i = 0; i< allProducts.length; i++) {
+  for (let i = 0; i < allProducts.length; i++) {
     if (clickedProd === allProducts[i].name) {
       allProducts[i].clicks++;
       break;
     }
   }
   if (Globeclicks === clickAllowed) {
-    console.log('end this shit');
     resultButton.className = 'clicks-allowed';
     productContainer.removeEventListener('click', handleProductClick);
     resultButton.addEventListener('click', handleButtonClick);
@@ -120,11 +119,31 @@ function handleProductClick(event) {
 }
 
 function handleButtonClick() {
-    renderResults();
+  renderResults();
+  resultButton.removeEventListener('click', handleButtonClick);
 }
-
+function arraySort() {
+  let arrPush = [];
+  while (allProducts.length > 0) {
+    let check = allProducts[0].clicks;
+    let arrIndex = allProducts[0];
+    let k = 0;
+    for (let i = 0; i < allProducts.length; i++) {
+      if (check < allProducts[i].clicks) {
+        check = allProducts[i].clicks;
+        arrIndex = allProducts[i];
+        k = i;
+      }
+    }
+    arrPush.push(arrIndex);
+    allProducts.splice(k, 1);
+    // console.log(arr.length);
+  }
+  allProducts = arrPush;
+}
 function renderResults() {
-
+  arraySort(allProducts);
+  console.log(allProducts);
   // for each  prod in my array, generate a LI
   // ex: name had X views and was clicked on X times
   for (let i = 0; i < allProducts.length; i++) {

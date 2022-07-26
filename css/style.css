@@ -22,21 +22,30 @@ h1 {
 main {
   width: 1300px;
   height: 700px;
-  margin: 3rem auto;
+  margin: 0 auto 0 auto;
   display: grid;
-  grid-template-rows: 200px 50px 100px;
-  grid-template-columns: 19% repeat(3 27%);
+  grid-template-columns: 22% 26% 26% 26%;
+  grid-template-rows: 250px 150px 300px;
+  border:5px solid black;
 }
 
-section{
-  grid-area: 1/ 2/ 2/ 5;
+/* -- product images -- */
+
+section {
+  height: 250px;
+  grid-column-start: 2;
+  grid-column-end: 5;
+  grid-row-start: 1;
+  grid-row-end: 2;
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
+  border: 1px solid black;
 }
+
 section img {
-  width: 300px;
-  max-height: 26rem;
+  width: 325px;
+  max-height: 250px;
   border: 5px solid transparent;
 }
 
@@ -45,45 +54,106 @@ section img:hover {
   cursor: pointer;
 }
 
-ul {
-  margin: 1rem;
-}
+/* -- END-- */
 
-/* -- button -- */
-section + div {
+/* RESULT BUTTON */
+section+div {
+  box-sizing: border-box;
   background-color: rgba(128, 128, 128, 0.734);
-  border: black solid 1rem;
+  border: black solid 1px;
   color: lightgrey;
   padding: .5rem 1rem;
-  width: max-content;
-  height: max-content;
+  width: 250px;
+  height: 680px;
   font-size: .8rem;
-  margin: 1rem;
-  grid-area: 1/1/4/2;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 4;
   pointer-events: none;
+  margin:auto;
 }
 
-section + div.clicks-allowed {
+div ul {
+  margin: 1rem;
+}
+
+div ul li {
+  list-style: disc;
+  margin: 10px;
+}
+/* END  */
+
+
+
+/* Empty and text divs */
+main div:nth-of-type(2) {
+  grid-column-start: 2;
+  grid-column-end: 5;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  border: 1px black solid;
+}
+
+main div:nth-of-type(3) {
+  grid-column-start: 2;
+  grid-column-end: 5;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  border: 1px black solid;
+  font-size:20px;
+}
+/* END */
+
+
+
+/* javascript  css */
+section+div.clicks-allowed {
   pointer-events: auto;
   cursor: pointer;
   background-color: rosybrown;
   color: white;
 }
-li{
-  list-style:disc;
-  margin:4px;
-}
-#seconddiv{
-  grid-template-rows: 2/3;
-  grid-template-columns:2/5;
 
-}
-
-section + div.clicks-allowed:hover {
+section+div.clicks-allowed:hover {
   background-color: rgb(211, 187, 175)
 }
+/* END */
+
+
 
 /* All things footer */
-footer{
-  width:80%;
+footer {
+  width: 80%;
+  margin: auto;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: darkseagreen;
+}
+
+footer ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer ul li {
+  padding: 0 25px 0 25px;
+  list-style: none;
+}
+/* END */
+
+
+
+/* All things header */
+header {
+  width: 80%;
+  margin: auto;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: darkseagreen;
 }

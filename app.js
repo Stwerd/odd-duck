@@ -1,58 +1,27 @@
 'use strict';
 
-/*
-
-Goat Picker
-
-  - I have collection of goat photos
-  - user is presented the photos in 2s (2 goat photos at a time) — should be 2 different photos
-  - user votes on their favorite by clicking on the photo
-  - 15 match ups per round of voting (so 15 total votes)
-  - at end of round display the results
-  - in results I want to see
-    - how many votes each goat got
-    - how many times each goat photo was render
-
-
-  PLAN
-
-  Constructor — goat
-    - name
-    - image source
-    - votes
-    - views
-  Global variables
-    - all goat array
-    - counter for the votes (number of matchups)
-  method function
-    render the goat image in the dom
-      - can't have 2 of the same goat
-    random number to use to get a goat
-    display the results
-  event lister
-    goat clicks
-      increment the vote
-      triger a new set of goats
-
-*/
-
 console.log('hi');
 
 // GLOBAL VARIABLES
 let productContainer = document.querySelector('section');
-let resultButton = document.querySelector('section + div');
+let resultButton = document.querySelector('section + div span');
 let ul = document.querySelector('ul');
 
 let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 let image3 = document.querySelector('section img:nth-child(3)');
 
-
 let allProducts = [];
 let Globeclicks = 0;
-
 let clickAllowed = 25;
 
+let prodViews = [];
+let prodNames = [];
+let prodClicks = [];
+let randProductArr = [];
+let check = [allProducts.length, allProducts.length, allProducts.length]
+
+//canvas
 
 // CONSTRUCTOR
 
@@ -73,7 +42,16 @@ function renderProducts() {
   let prod1 = getRandomProduct();
   let prod2 = getRandomProduct();
   let prod3 = getRandomProduct();
-  console.log(prod1, prod2, prod3);
+  let checked = [prod1, prod2, prod3];
+  let found = check.some(r => checked.includes(r))
+  while (found) {
+    prod1 = getRandomProduct();
+    prod2 = getRandomProduct();
+    prod3 = getRandomProduct();
+    checked = [prod1, prod2, prod3];
+    found = check.some(r => checked.includes(r))
+  }
+  check = [prod1, prod2, prod3];
   // seriously consider using an array here
   // remember how do you know if an array includes something?
   // Google it and find out
@@ -95,6 +73,8 @@ function renderProducts() {
   allProducts[prod3].views++;
   // console.log(allProducts);
 }
+
+
 
 function handleProductClick(event) {
   if (event.target === productContainer) {
@@ -118,10 +98,15 @@ function handleProductClick(event) {
   renderProducts();
 }
 
+
+// If you click the button, it creates a list, then removes the ability to click in again.
 function handleButtonClick() {
   renderResults();
   resultButton.removeEventListener('click', handleButtonClick);
 }
+
+
+// Sorts array with the first index having most clicks
 function arraySort() {
   let arrPush = [];
   while (allProducts.length > 0) {
@@ -141,20 +126,69 @@ function arraySort() {
   }
   allProducts = arrPush;
 }
+
+
+// Capitalized first letter of each product
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
 function renderResults() {
   arraySort(allProducts);
-  console.log(allProducts);
   // for each  prod in my array, generate a LI
   // ex: name had X views and was clicked on X times
   for (let i = 0; i < allProducts.length; i++) {
+    prodClicks.push(allProducts[i].clicks);
+    prodNames.push(allProducts[i].name);
+    prodViews.push(allProducts[i].views);
     let li = document.createElement('li');
-    li.textContent = `${allProducts[i].name}: ${allProducts[i].clicks} Votes`;
+    li.textContent = `${allProducts[i].name}: ${allProducts[i].views} views & ${allProducts[i].clicks}`;
     ul.appendChild(li);
   }
+  console.log('this is a test' + prodNames);
+  console.log('this is a test' + prodClicks);
+  console.log('this is a test' + prodViews);
+  renderChart();
+}
+function renderChart() {
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: prodNames,
+      datasets: [{
+        label: '# of Votes',
+        data: prodClicks,
+        backgroundColor: 'rgba(0,0,255,0.2)',
+        borderColor: 'rgba(0,0,255,1)',
+        borderWidth: 1
+      },
+      {
+        label: '# of Views',
+        data: prodViews,
+        backgroundColor: 'rgba(255, 99, 132, 0.8)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'x',
+      legend: {
+        fontColor: 'white',
+        fontSize: 18
+      },
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  })
 }
 
 // EXCUTABLE CODE
-
 
 let bag = new Product('bag');
 let banana = new Product('banana');
@@ -181,3 +215,4 @@ allProducts.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthu
 console.log(allProducts);
 renderProducts();
 productContainer.addEventListener('click', handleProductClick);
+

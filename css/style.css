@@ -20,6 +20,7 @@ h1 {
 }
 
 main {
+  box-sizing: content-box;
   width: 1300px;
   height: 700px;
   margin: 0 auto 0 auto;
@@ -59,12 +60,12 @@ section img:hover {
 /* RESULT BUTTON */
 section+div {
   box-sizing: border-box;
-  background-color: rgba(128, 128, 128, 0.734);
+  background-color: rgba(49, 42, 42, 0.734);
   border: black solid 1px;
   color: lightgrey;
-  padding: .5rem 1rem;
+  padding:1rem;
   width: 250px;
-  height: 680px;
+  height: 600px;
   font-size: .8rem;
   grid-column-start: 1;
   grid-column-end: 2;
@@ -73,20 +74,20 @@ section+div {
   pointer-events: none;
   margin:auto;
 }
-
-div ul {
-  margin: 1rem;
+section+div span{
+  padding:5px;
+  border:1px lightgrey solid;
 }
+/* END */
 
+
+/* Result LIST */
 div ul li {
   list-style: disc;
   margin: 10px;
 }
 /* END  */
 
-
-
-/* Empty and text divs */
 main div:nth-of-type(2) {
   grid-column-start: 2;
   grid-column-end: 5;
@@ -108,14 +109,14 @@ main div:nth-of-type(3) {
 
 
 /* javascript  css */
-section+div.clicks-allowed {
+section+div span.clicks-allowed {
   pointer-events: auto;
   cursor: pointer;
   background-color: rosybrown;
   color: white;
 }
 
-section+div.clicks-allowed:hover {
+section+div span.clicks-allowed:hover {
   background-color: rgb(211, 187, 175)
 }
 /* END */
@@ -157,3 +158,4 @@ header {
   align-items: center;
   background-color: darkseagreen;
 }
+/* Da ENd */

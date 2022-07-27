@@ -1,39 +1,4 @@
 'use strict';
-/*
-
-Goat Picker
-
-  - I have collection of goat photos
-  - user is presented the photos in 2s (2 goat photos at a time) — should be 2 different photos
-  - user votes on their favorite by clicking on the photo
-  - 15 match ups per round of voting (so 15 total votes)
-  - at end of round display the results
-  - in results I want to see
-    - how many votes each goat got
-    - how many times each goat photo was render
-
-
-  PLAN
-
-  Constructor — goat
-    - name
-    - image source
-    - votes
-    - views
-  Global variables
-    - all goat array
-    - counter for the votes (number of matchups)
-  method function
-    render the goat image in the dom
-      - can't have 2 of the same goat
-    random number to use to get a goat
-    display the results
-  event lister
-    goat clicks
-      increment the vote
-      triger a new set of goats
-
-*/
 
 console.log('hi');
 
@@ -48,11 +13,13 @@ let image3 = document.querySelector('section img:nth-child(3)');
 
 let allProducts = [];
 let Globeclicks = 0;
-let clickAllowed = 5;
+let clickAllowed = 25;
 
 let prodViews = [];
 let prodNames = [];
 let prodClicks = [];
+let randProductArr = [];
+let check = [allProducts.length, allProducts.length, allProducts.length]
 
 //canvas
 
@@ -75,7 +42,16 @@ function renderProducts() {
   let prod1 = getRandomProduct();
   let prod2 = getRandomProduct();
   let prod3 = getRandomProduct();
-  console.log(prod1, prod2, prod3);
+  let checked = [prod1, prod2, prod3];
+  let found = check.some(r => checked.includes(r))
+  while (found) {
+    prod1 = getRandomProduct();
+    prod2 = getRandomProduct();
+    prod3 = getRandomProduct();
+    checked = [prod1, prod2, prod3];
+    found = check.some(r => checked.includes(r))
+  }
+  check = [prod1, prod2, prod3];
   // seriously consider using an array here
   // remember how do you know if an array includes something?
   // Google it and find out
@@ -166,7 +142,7 @@ function renderResults() {
     prodClicks.push(allProducts[i].clicks);
     prodNames.push(allProducts[i].name);
     prodViews.push(allProducts[i].views);
-    let li =document.createElement('li');
+    let li = document.createElement('li');
     li.textContent = `${allProducts[i].name}: ${allProducts[i].views} views & ${allProducts[i].clicks}`;
     ul.appendChild(li);
   }
@@ -175,7 +151,7 @@ function renderResults() {
   console.log('this is a test' + prodViews);
   renderChart();
 }
-function renderChart(){
+function renderChart() {
   const ctx = document.getElementById('myChart').getContext('2d');
   const myChart = new Chart(ctx, {
     type: 'bar',
@@ -195,11 +171,12 @@ function renderChart(){
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1
       }]
-    }, options: {
+    },
+    options: {
       indexAxis: 'x',
       legend: {
-          fontColor: "white",
-          fontSize: 18
+        fontColor: 'white',
+        fontSize: 18
       },
       maintainAspectRatio: false,
       scales: {
@@ -211,9 +188,7 @@ function renderChart(){
   })
 }
 
-
 // EXCUTABLE CODE
-
 
 let bag = new Product('bag');
 let banana = new Product('banana');

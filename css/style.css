@@ -109,15 +109,24 @@ main div:nth-of-type(3) {
 
 
 /* javascript  css */
+
 section+div span.clicks-allowed {
   pointer-events: auto;
   cursor: pointer;
   background-color: rosybrown;
   color: white;
 }
+#clear{
+  cursor: pointer;
+  background-color: rosybrown;
+  color: white;
+}
+#clear:hover {
+  background-color: rgb(211, 187, 175);
+}
 
 section+div span.clicks-allowed:hover {
-  background-color: rgb(211, 187, 175)
+  background-color: rgb(211, 187, 175);
 }
 /* END */
 

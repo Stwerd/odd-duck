@@ -1,10 +1,9 @@
 'use strict';
 
-console.log('hi');
-
 // GLOBAL VARIABLES
 let productContainer = document.querySelector('section');
 let resultButton = document.querySelector('section + div span');
+let clearResults = document.getElementById('clear');
 let ul = document.querySelector('ul');
 
 let image1 = document.querySelector('section img:first-child');
@@ -20,8 +19,6 @@ let prodNames = [];
 let prodClicks = [];
 let randProductArr = [];
 let check = [allProducts.length, allProducts.length, allProducts.length]
-
-//canvas
 
 // CONSTRUCTOR
 
@@ -49,7 +46,7 @@ function renderProducts() {
     prod2 = getRandomProduct();
     prod3 = getRandomProduct();
     checked = [prod1, prod2, prod3];
-    found = check.some(r => checked.includes(r))
+    found = check.some(b => checked.includes(b))
   }
   check = [prod1, prod2, prod3];
   // seriously consider using an array here
@@ -58,7 +55,6 @@ function renderProducts() {
   while (prod1 === prod2 || prod1 === prod3 || prod2 === prod3) {
     prod2 = getRandomProduct();
     prod3 = getRandomProduct();
-
     // console.log(prod1, prod2, prod3);
   }
 
@@ -74,38 +70,22 @@ function renderProducts() {
   // console.log(allProducts);
 }
 
-
-
-function handleProductClick(event) {
-  if (event.target === productContainer) {
-    alert('Please click on an image');
-  }
-  Globeclicks++;
-  let clickedProd = event.target.alt;
-  // console.log(clickedProd);
-
+//runs a method that organizes the array, it stores the current results into the storage, fills the ul, then runs a function which fills a canvas tag with a chart.js
+function renderResults() {
+  storeLocale();
+  arraySort(allProducts);
+  // for each  prod in my array, generate a LI
+  // ex: name had X views and was clicked on X times
   for (let i = 0; i < allProducts.length; i++) {
-    if (clickedProd === allProducts[i].name) {
-      allProducts[i].clicks++;
-      break;
-    }
+    prodClicks.push(allProducts[i].clicks);
+    prodNames.push(allProducts[i].name);
+    prodViews.push(allProducts[i].views);
+    let li = document.createElement('li');
+    li.textContent = `${allProducts[i].name}: ${allProducts[i].views} views & ${allProducts[i].clicks}`;
+    ul.appendChild(li);
   }
-  if (Globeclicks === clickAllowed) {
-    resultButton.className = 'clicks-allowed';
-    productContainer.removeEventListener('click', handleProductClick);
-    resultButton.addEventListener('click', handleButtonClick);
-  }
-  renderProducts();
+  renderChart();
 }
-
-
-// If you click the button, it creates a list, then removes the ability to click in again.
-function handleButtonClick() {
-  renderResults();
-  resultButton.removeEventListener('click', handleButtonClick);
-}
-
-
 // Sorts array with the first index having most clicks
 function arraySort() {
   let arrPush = [];
@@ -126,31 +106,30 @@ function arraySort() {
   }
   allProducts = arrPush;
 }
-
-
 // Capitalized first letter of each product
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
-
-function renderResults() {
-  arraySort(allProducts);
-  // for each  prod in my array, generate a LI
-  // ex: name had X views and was clicked on X times
-  for (let i = 0; i < allProducts.length; i++) {
-    prodClicks.push(allProducts[i].clicks);
-    prodNames.push(allProducts[i].name);
-    prodViews.push(allProducts[i].views);
-    let li = document.createElement('li');
-    li.textContent = `${allProducts[i].name}: ${allProducts[i].views} views & ${allProducts[i].clicks}`;
-    ul.appendChild(li);
+function storeLocale() {
+  let prodsrHere = localStorage.getItem('Products')
+  if (prodsrHere) {
+    let parsedProds = JSON.parse(prodsrHere);
+    console.log(parsedProds);
+    console.log(allProducts);
+    for (let i = 0; i < allProducts.length; i++) {
+      for (let z = 0; z < parsedProds.length; z++) {
+        if (allProducts[i].name === parsedProds[z].name) {
+          allProducts[i].views += parsedProds[z].views;
+          allProducts[i].clicks += parsedProds[z].clicks;
+        }
+      }
+    }
   }
-  console.log('this is a test' + prodNames);
-  console.log('this is a test' + prodClicks);
-  console.log('this is a test' + prodViews);
-  renderChart();
+  let stringifiedProducts = JSON.stringify(allProducts);
+  // set it in local storage
+  localStorage.setItem('Products', stringifiedProducts)
 }
+
 function renderChart() {
   const ctx = document.getElementById('myChart').getContext('2d');
   const myChart = new Chart(ctx, {
@@ -187,6 +166,42 @@ function renderChart() {
     }
   })
 }
+//Handlers 
+
+function handleProductClick(event) {
+  if (event.target === productContainer) {
+    alert('Please click on an image');
+  }
+  Globeclicks++;
+  let clickedProd = event.target.alt;
+  // console.log(clickedProd);
+
+  for (let i = 0; i < allProducts.length; i++) {
+    if (clickedProd === allProducts[i].name) {
+      allProducts[i].clicks++;
+      break;
+    }
+  }
+  if (Globeclicks === clickAllowed) {
+    resultButton.className = 'clicks-allowed';
+    productContainer.removeEventListener('click', handleProductClick);
+    resultButton.addEventListener('click', handleButtonClick);
+  }
+  renderProducts();
+}
+
+function handleclickResults() {
+  console.log('Yummy data, bye bye');
+  localStorage.clear();
+}
+
+// If you click the button, it creates a list, then removes the ability to click in again.
+function handleButtonClick() {
+  renderResults();
+  resultButton.removeEventListener('click', handleButtonClick);
+}
+//END
+
 
 // EXCUTABLE CODE
 
@@ -212,7 +227,7 @@ let wine_glass = new Product('wine-glass');
 
 allProducts.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dog_duck, dragon, pen, pet_sweep, scissors, shark, sweep, tauntaun, unicorn, water_can, wine_glass);
 
-console.log(allProducts);
 renderProducts();
-productContainer.addEventListener('click', handleProductClick);
 
+clearResults.addEventListener('click', handleclickResults);
+productContainer.addEventListener('click', handleProductClick);

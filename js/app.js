@@ -4,6 +4,7 @@
 let productContainer = document.querySelector('section');
 let resultButton = document.querySelector('section + div span');
 let clearResults = document.getElementById('clear');
+let refresh = document.querySelector('section + div span:nth-child(3)');
 let ul = document.querySelector('ul');
 
 let image1 = document.querySelector('section img:first-child');
@@ -29,34 +30,32 @@ function Product(name, fileExtension = 'jpg') {
   this.views = 0;
 }
 
-// FUNCTIONS
 
+
+// FUNCTIONS
+//Runs a random number for the length of the allProducts, to get a random product to display in renderProducts();
 function getRandomProduct() {
   return Math.floor(Math.random() * allProducts.length);
 }
 
+
+//Generates three random images, and checks it compared to an array that stores the previous geneation of three random images, and generates them 
 function renderProducts() {
   let prod1 = getRandomProduct();
   let prod2 = getRandomProduct();
   let prod3 = getRandomProduct();
   let checked = [prod1, prod2, prod3];
   let found = check.some(r => checked.includes(r))
-  while (found) {
+  //while the two of the images are the same, or they include images from the previous generation, run it back
+  while (found || prod1 === prod2 || prod1 === prod3 || prod2 === prod3) {
     prod1 = getRandomProduct();
     prod2 = getRandomProduct();
     prod3 = getRandomProduct();
     checked = [prod1, prod2, prod3];
     found = check.some(b => checked.includes(b))
   }
+  //stores the current images to check next time for lack of errors.
   check = [prod1, prod2, prod3];
-  // seriously consider using an array here
-  // remember how do you know if an array includes something?
-  // Google it and find out
-  while (prod1 === prod2 || prod1 === prod3 || prod2 === prod3) {
-    prod2 = getRandomProduct();
-    prod3 = getRandomProduct();
-    // console.log(prod1, prod2, prod3);
-  }
 
   image1.src = allProducts[prod1].src;
   image1.alt = allProducts[prod1].name;
@@ -69,6 +68,7 @@ function renderProducts() {
   allProducts[prod3].views++;
   // console.log(allProducts);
 }
+
 
 //runs a method that organizes the array, it stores the current results into the storage, fills the ul, then runs a function which fills a canvas tag with a chart.js
 function renderResults() {
@@ -86,6 +86,8 @@ function renderResults() {
   }
   renderChart();
 }
+
+
 // Sorts array with the first index having most clicks
 function arraySort() {
   let arrPush = [];
@@ -106,10 +108,15 @@ function arraySort() {
   }
   allProducts = arrPush;
 }
+
+
 // Capitalized first letter of each product
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+
+//After you click renderResults, it saves the data to locale storage, and pulls any stored clicks and adds them to the current clicks and views to be displayed
 function storeLocale() {
   let prodsrHere = localStorage.getItem('Products')
   if (prodsrHere) {
@@ -130,6 +137,7 @@ function storeLocale() {
   localStorage.setItem('Products', stringifiedProducts)
 }
 
+//Creates a chart with the product names as the labels for the x-axis, and adds two data sets with the views and clicks of each products in the array.
 function renderChart() {
   const ctx = document.getElementById('myChart').getContext('2d');
   const myChart = new Chart(ctx, {
@@ -167,7 +175,7 @@ function renderChart() {
   })
 }
 //Handlers 
-
+//Whe you click an image, add a click to its index in the array, then if you still have votes left as defined as GlobeClicks, generate three new random images as defined in renderProducts();
 function handleProductClick(event) {
   if (event.target === productContainer) {
     alert('Please click on an image');
@@ -190,15 +198,24 @@ function handleProductClick(event) {
   renderProducts();
 }
 
+
+//Runs when you click the clear results button, clears the data in local storage
 function handleClickResults() {
   console.log('Yummy data, bye bye');
   localStorage.clear();
 }
 
+
 // If you click the button, it creates a list, then removes the ability to click in again.
 function handleButtonClick() {
   renderResults();
   resultButton.removeEventListener('click', handleButtonClick);
+}
+
+
+//runs when you click the reload button, refreshes the page
+function reload(){
+  location.reload();
 }
 //END
 
@@ -231,3 +248,4 @@ renderProducts();
 
 clearResults.addEventListener('click', handleClickResults);
 productContainer.addEventListener('click', handleProductClick);
+refresh.addEventListener('click', reload);

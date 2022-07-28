@@ -64,7 +64,7 @@ section+div {
   border: black solid 1px;
   color: lightgrey;
   padding:1rem;
-  width: 250px;
+  width: 260px;
   height: 600px;
   font-size: .8rem;
   grid-column-start: 1;
@@ -75,7 +75,8 @@ section+div {
   margin:auto;
 }
 section+div span{
-  padding:5px;
+  padding:4px;
+  margin: 0 1px 0 1px;
   border:1px lightgrey solid;
 }
 /* END */
@@ -110,19 +111,19 @@ main div:nth-of-type(3) {
 
 /* javascript  css */
 
-section+div span.clicks-allowed {
+section+div span:first-child.clicks-allowed {
   pointer-events: auto;
   cursor: pointer;
   background-color: rosybrown;
   color: white;
 }
-#clear{
+section+div span:nth-child(2), section+div span:nth-child(3) {
   pointer-events: auto;
   cursor: pointer;
   background-color: rosybrown;
   color: white;
 }
-#clear:hover {
+section+div span:nth-child(2):hover, section+div span:nth-child(3):hover {
   background-color: rgb(211, 187, 175);
 }
 

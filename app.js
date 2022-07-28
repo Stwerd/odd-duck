@@ -190,7 +190,7 @@ function handleProductClick(event) {
   renderProducts();
 }
 
-function handleclickResults() {
+function handleClickResults() {
   console.log('Yummy data, bye bye');
   localStorage.clear();
 }
@@ -229,5 +229,5 @@ allProducts.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthu
 
 renderProducts();
 
-clearResults.addEventListener('click', handleclickResults);
+clearResults.addEventListener('click', handleClickResults);
 productContainer.addEventListener('click', handleProductClick);

@@ -10,7 +10,9 @@ let ul = document.querySelector('ul');
 let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 let image3 = document.querySelector('section img:nth-child(3)');
-
+image1.className = 'clicks-allowed';
+image2.className = 'clicks-allowed';
+image3.className = 'clicks-allowed';
 let allProducts = [];
 let Globeclicks = 0;
 let clickAllowed = 25;
@@ -192,6 +194,9 @@ function handleProductClick(event) {
   }
   if (Globeclicks === clickAllowed) {
     resultButton.className = 'clicks-allowed';
+    image1.classList.remove('clicks-allowed');
+    image2.classList.remove('clicks-allowed');
+    image3.classList.remove('clicks-allowed');
     productContainer.removeEventListener('click', handleProductClick);
     resultButton.addEventListener('click', handleButtonClick);
   }

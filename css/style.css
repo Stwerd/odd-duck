@@ -48,10 +48,12 @@ section img {
   width: 325px;
   max-height: 250px;
   border: 5px solid transparent;
+  transition: border 500ms ease;
+
 }
 
-section img:hover {
-  border: 5px solid rgb(169, 108, 28);
+section img.clicks-allowed:hover {
+  border: 5px solid #897356;
   cursor: pointer;
 }
 
@@ -116,12 +118,15 @@ section+div span:first-child.clicks-allowed {
   cursor: pointer;
   background-color: rosybrown;
   color: white;
+  transition: background-color 300ms ease;
 }
 section+div span:nth-child(2), section+div span:nth-child(3) {
   pointer-events: auto;
   cursor: pointer;
   background-color: rosybrown;
   color: white;
+  transition: background-color 300ms ease;
+
 }
 section+div span:nth-child(2):hover, section+div span:nth-child(3):hover {
   background-color: rgb(211, 187, 175);

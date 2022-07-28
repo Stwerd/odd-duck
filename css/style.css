@@ -117,6 +117,7 @@ section+div span.clicks-allowed {
   color: white;
 }
 #clear{
+  pointer-events: auto;
   cursor: pointer;
   background-color: rosybrown;
   color: white;
